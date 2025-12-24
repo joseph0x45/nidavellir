@@ -1,5 +1,3 @@
-.PHONY: resources
-
 VERSION := $(shell git describe --tags --abbrev=0)
 APP := app
 
