@@ -33,12 +33,17 @@ func main() {
 	resourceRepository := flag.String("repo", "", "Set the repository URL for the resource")
 	resourceType := flag.String("type", "", "Set the type for the resource")
 	registerFlag := flag.Bool("register", false, "Register resource")
+	installService := flag.Bool("install-service", false, "Install Service file")
 
 	flag.Parse()
 
 	if *versionFlag {
 		fmt.Println(appName, version)
 		return
+	}
+
+	if *installService {
+		panic("Not Implemented")
 	}
 
 	conn := db.Connect(*resetDB)
