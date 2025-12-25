@@ -10,7 +10,7 @@ import (
 )
 
 var version = "dev"
-var appName = "app"
+var appName = "nidavellir"
 
 func main() {
 	r := chi.NewRouter()
