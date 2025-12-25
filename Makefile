@@ -2,7 +2,7 @@ VERSION := $(shell git describe --tags --abbrev=0)
 APP := app
 
 run-web:
-	cd web && npm run dev --host
+	cd web && npm run dev -- --host
 
 run:
 	go build . && ./$(APP)
