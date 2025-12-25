@@ -17,7 +17,7 @@
 
   onMount(async () => {
     try {
-      const response = await fetch("/packages");
+      const response = await fetch("/api/packages");
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       packages = data.data;

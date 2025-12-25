@@ -13,7 +13,7 @@
   export let pkg;
 </script>
 
-<Link to={`/packages/${pkg.id}`} class="block p-4 border rounded hover:shadow">
+<Link to={`/packages?id=${pkg.id}`} class="block p-4 border rounded hover:shadow">
   <h2 class="text-xl font-semibold">{pkg.name}</h2>
   <p class="text-gray-600 mb-2">{pkg.description}</p>
   <p class="text-gray-500"><strong>Type:</strong> {pkg.package_type}</p>
