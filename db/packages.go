@@ -41,7 +41,34 @@ func (c *Conn) InsertPackage(p *models.Package) error {
 }
 
 func (c *Conn) GetAllPackages() ([]models.Package, error) {
-	return nil, nil
+	const query = `
+    select * from packages;
+  `
+	packages := []models.Package{}
+	err := c.db.Select(&packages, query)
+	if err != nil {
+		return nil, fmt.Errorf("Error while getting all packages: %w", err)
+	}
+	return packages, nil
+}
+
+func (c *Conn) GetPackageReleases(id string) ([]models.PackageRelease, error) {
+	const query = `
+    select
+      id,
+      package_id,
+      version,
+      created_at
+    from package_releases
+    where package_id = ?
+    order by created_at desc;
+  `
+	releases := []models.PackageRelease{}
+	err := c.db.Select(&releases, query, id)
+	if err != nil {
+		return nil, fmt.Errorf("Error while getting package releases: %w", err)
+	}
+	return releases, nil
 }
 
 func (c *Conn) PackageNameExists(name string) bool {
@@ -119,4 +146,22 @@ func (c *Conn) PackageReleaseVersionExists(packageID, version string) bool {
 		return false
 	}
 	return exists
+}
+
+func (c *Conn) GetReleaseArtifacts(id string) ([]models.Artifact, error) {
+	const query = `
+    select
+      id,
+      package_release_id,
+      artifact_type,
+      download_url
+    from artifacts
+    where package_release_id = ?;
+  `
+	releases := []models.Artifact{}
+	err := c.db.Select(&releases, query, id)
+	if err != nil {
+		return nil, fmt.Errorf("Error while getting release artifacts: %w", err)
+	}
+	return releases, nil
 }

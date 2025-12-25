@@ -52,7 +52,7 @@ func (h *Handler) createRelease(w http.ResponseWriter, r *http.Request) {
 		ID:        uuid.NewString(),
 		PackageID: packageID,
 		Version:   payload.Version,
-		CreatedAt: time.Now(),
+		CreatedAt: time.Now().Unix(),
 	}
 	artifacts := []*models.Artifact{}
 	for _, artifact := range payload.Artifacts {
@@ -70,4 +70,66 @@ func (h *Handler) createRelease(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *Handler) getPackages(w http.ResponseWriter, r *http.Request) {
+	packages, err := h.conn.GetAllPackages()
+	if err != nil {
+		log.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	bytes, err := json.Marshal(map[string]any{
+		"data": packages,
+	})
+	if err != nil {
+		log.Println("Error while marshalling packages data:", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
+}
+
+func (h *Handler) getPackageReleases(w http.ResponseWriter, r *http.Request) {
+	type releaseData struct {
+		models.PackageRelease
+		Artifacts []models.Artifact `json:"artifacts"`
+	}
+	packageID := chi.URLParam(r, "id")
+	if !h.conn.PackageExists(packageID) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	releasesData := []releaseData{}
+	releases, err := h.conn.GetPackageReleases(packageID)
+	if err != nil {
+		log.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	for _, release := range releases {
+		releaseArtifacts, err := h.conn.GetReleaseArtifacts(release.ID)
+		if err != nil {
+			log.Println(err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		releasesData = append(releasesData, releaseData{
+			PackageRelease: release,
+			Artifacts:      releaseArtifacts,
+		})
+	}
+	bytes, err := json.Marshal(map[string]any{
+		"data": releasesData,
+	})
+	if err != nil {
+		log.Println("Error while marshalling releases:", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
 }

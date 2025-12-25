@@ -33,7 +33,7 @@ func (h *Handler) authMiddleware(next http.Handler) http.Handler {
 }
 
 func (h *Handler) RegisterRoutes(r chi.Router) {
-	r.With(h.authMiddleware).Group(func(r chi.Router) {
-		r.Post("/packages/{id}/releases", h.createRelease)
-	})
+	r.With(h.authMiddleware).Post("/packages/{id}/releases", h.createRelease)
+	r.Get("/packages", h.getPackages)
+	r.Get("/packages/{id}", h.getPackageReleases)
 }

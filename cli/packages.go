@@ -53,8 +53,8 @@ func registerPackage(config *Config, db *db.Conn) {
 		Description: config.Description,
 		RepoURL:     config.RepoURL,
 		PackageType: config.PackageType,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		CreatedAt:   time.Now().Unix(),
+		UpdatedAt:   time.Now().Unix(),
 	}
 	if err := db.InsertPackage(newPackage); err != nil {
 		log.Println(err.Error())
