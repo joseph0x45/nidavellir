@@ -2,4 +2,4 @@ package handler
 
 import "net/http"
 
-func (h *Handler) getPackages(w http.ResponseWriter, r *http.Request) {}
+func (h *Handler) registerPackage(w http.ResponseWriter, r *http.Request) {}

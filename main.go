@@ -27,6 +27,12 @@ func main() {
 	createFlag := flag.Bool("create", false, "Create resource")
 	deleteFlag := flag.Bool("delete", false, "Delete resource")
 	resourceLabel := flag.String("label", "", "Set the label for the resource")
+	resourceName := flag.String("name", "", "Set the name for the resource")
+	packagesFlag := flag.Bool("packages", false, "Manage packages")
+	resourceDescription := flag.String("description", "", "Set the description for the resource")
+	resourceRepository := flag.String("repo", "", "Set the repository URL for the resource")
+	resourceType := flag.String("type", "", "Set the type for the resource")
+	registerFlag := flag.Bool("register", false, "Register resource")
 
 	flag.Parse()
 
@@ -40,11 +46,17 @@ func main() {
 
 	if *cliFlag {
 		cli.DispatchCLICommands(&cli.Config{
-			AuthTokens: *authTokensFlag,
-			List:       *listFlag,
-			Create:     *createFlag,
-			Delete:     *deleteFlag,
-			Label:      *resourceLabel,
+			AuthTokens:  *authTokensFlag,
+			List:        *listFlag,
+			Create:      *createFlag,
+			Delete:      *deleteFlag,
+			Label:       *resourceLabel,
+			Name:        *resourceName,
+			Packages:    *packagesFlag,
+			Description: *resourceDescription,
+			RepoURL:     *resourceRepository,
+			PackageType: *resourceType,
+			Register:    *registerFlag,
 		}, conn)
 		return
 	}

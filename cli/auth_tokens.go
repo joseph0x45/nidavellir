@@ -24,8 +24,7 @@ func handleAuthTokensCmds(config *Config, db *db.Conn) {
 
 func createAuthToken(label string, db *db.Conn) {
 	if label == "" {
-		fmt.Println("flag 'label' is required when creating a token")
-		printUsage()
+		requiredFlagErr("label")
 		return
 	}
 	existing, err := db.GetAuthTokenByLabel(label)
@@ -75,8 +74,7 @@ func listTokens(db *db.Conn) {
 
 func deleteToken(label string, db *db.Conn) {
 	if label == "" {
-		fmt.Println("flag 'label' is required when deleting a token")
-		printUsage()
+		requiredFlagErr("label")
 		return
 	}
 	if err := db.DeleteToken(label); err != nil {

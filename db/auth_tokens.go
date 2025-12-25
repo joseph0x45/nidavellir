@@ -1,11 +1,24 @@
 package db
 
 import (
-  "github.com/joseph0x45/nidavellir/models"
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
+
+	"github.com/joseph0x45/nidavellir/models"
 )
+
+func (c *Conn) TokenIsValid(token string) bool {
+	var exists bool
+	const query = "select exists(selecet 1 from auth_tokens where token=?)"
+	err := c.db.QueryRow(query, token).Scan(&exists)
+	if err != nil {
+		log.Println("Error checking token existence:", err)
+		return false
+	}
+	return exists
+}
 
 func (c *Conn) GetAuthTokenByLabel(label string) (*models.AuthToken, error) {
 	const query = "select * from auth_tokens where label=?"

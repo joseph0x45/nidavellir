@@ -13,4 +13,19 @@ var migrations = []sad.Migration{
       );
     `,
 	},
+	{
+		Version: 2,
+		Name:    "create_packages",
+		SQL: `
+      create table packages(
+        id text not null primary key,
+        name text not null unique,
+        description text not null,
+        repo_url text not null,
+        package_type text not null,
+        created_at integer not null,
+        updated_at integer not null
+      );
+    `,
+	},
 }
