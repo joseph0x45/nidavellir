@@ -9,8 +9,10 @@ import (
 
 	"github.com/joseph0x45/nidavellir/cli"
 	"github.com/joseph0x45/nidavellir/db"
+	"github.com/joseph0x45/nidavellir/handler"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 var version = "dev"
@@ -66,13 +68,16 @@ func main() {
 		return
 	}
 
+  r.Use(middleware.Logger)
+	handler := handler.NewHandler(conn)
+	handler.RegisterRoutes(r)
+	registerWeb(r)
 	server := http.Server{
 		Handler:      r,
 		Addr:         ":" + *port,
 		ReadTimeout:  time.Minute,
 		WriteTimeout: time.Minute,
 	}
-	registerWeb(r)
 
 	log.Printf("Starting server on http://0.0.0.0:%s\n", *port)
 	if err := server.ListenAndServe(); err != nil {

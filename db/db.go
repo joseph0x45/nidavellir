@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/joseph0x45/sad"
 )
@@ -23,4 +25,11 @@ func Connect(reset bool) *Conn {
 		panic(err)
 	}
 	return &Conn{db}
+}
+
+func rollbackTx(tx *sqlx.Tx, originalErr error) error {
+	if err := tx.Rollback(); err != nil {
+		return errors.Join(originalErr, err)
+	}
+	return originalErr
 }

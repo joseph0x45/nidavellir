@@ -28,4 +28,25 @@ var migrations = []sad.Migration{
       );
     `,
 	},
+	{
+		Version: 3,
+		Name:    "create_package_releases_and_artifacts",
+		SQL: `
+      create table package_releases (
+        id text not null primary key,
+        package_id text not null,
+        version text not null,
+        created_at integer not null,
+        foreign key(package_id) references packages(id) on delete cascade,
+        unique(package_id, version)
+      );
+      create table artifacts (
+        id text not null primary key,
+        package_release_id text not null,
+        artifact_type text not null,
+        download_url text not null,
+        foreign key(package_release_id) references package_releases(id) on delete cascade
+      );
+    `,
+	},
 }

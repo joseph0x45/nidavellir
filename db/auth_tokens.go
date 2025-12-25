@@ -11,7 +11,7 @@ import (
 
 func (c *Conn) TokenIsValid(token string) bool {
 	var exists bool
-	const query = "select exists(selecet 1 from auth_tokens where token=?)"
+	const query = "select exists(select 1 from auth_tokens where token=?)"
 	err := c.db.QueryRow(query, token).Scan(&exists)
 	if err != nil {
 		log.Println("Error checking token existence:", err)
