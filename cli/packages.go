@@ -48,13 +48,13 @@ func registerPackage(config *Config, db *db.Conn) {
 		return
 	}
 	newPackage := &models.Package{
-		ID:            uuid.NewString(),
-		Name:          config.Name,
-		Description:   config.Description,
-		RepoURL:       config.RepoURL,
-		PackageType:   config.PackageType,
-		CreatedAt:     time.Now(),
-		UpdatedAt: time.Now(),
+		ID:          uuid.NewString(),
+		Name:        config.Name,
+		Description: config.Description,
+		RepoURL:     config.RepoURL,
+		PackageType: config.PackageType,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 	if err := db.InsertPackage(newPackage); err != nil {
 		log.Println(err.Error())
