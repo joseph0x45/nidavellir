@@ -9,7 +9,9 @@ run:
 
 test-seed:
 	./nidavellir --cli --tokens --create --label test
+	./nidavellir --cli --tokens --create --label test2
 	./nidavellir --cli --packages --register --name test --description test --repo test --type binary
+	./nidavellir --cli --packages --register --name test2 --description test --repo test --type binary
 
 build-release:
 	GOOS=linux GOARCH=amd64 \

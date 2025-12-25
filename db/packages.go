@@ -42,7 +42,16 @@ func (c *Conn) InsertPackage(p *models.Package) error {
 
 func (c *Conn) GetAllPackages() ([]models.Package, error) {
 	const query = `
-    select * from packages;
+    select
+      id,
+      name,
+      description,
+      repo_url,
+      package_type,
+      created_at,
+      updated_at
+    from packages
+    order by created_at desc;
   `
 	packages := []models.Package{}
 	err := c.db.Select(&packages, query)
