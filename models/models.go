@@ -3,5 +3,6 @@ package models
 type Package struct{}
 
 type AuthToken struct {
-	ID string `json:"id" db:"id"`
+	Label string `json:"label" db:"label"`
+	Token string `json:"token" db:"token"`
 }
