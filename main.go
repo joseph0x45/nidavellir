@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/handler"
 	"flag"
 	"fmt"
 	"log"
@@ -28,6 +29,8 @@ func main() {
 		Handler: r,
 		Addr:    ":" + *port,
 	}
+	handler := handler.NewHandler()
+	handler.RegisterRoutes(r)
 	registerWeb(r)
 
 	log.Printf("Starting server on http://0.0.0.0:%s\n", *port)
