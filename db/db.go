@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joseph0x45/sad"
@@ -16,6 +17,9 @@ func (c *Conn) Close() {
 }
 
 func Connect(reset bool) *Conn {
+	if reset {
+		log.Println("Starting Nidavellir with fresh database")
+	}
 	db, err := sad.OpenDBConnection(sad.DBConnectionOptions{
 		AppName:           "nidavellir",
 		EnableForeignKeys: true,

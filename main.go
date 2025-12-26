@@ -25,7 +25,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	resetDB := flag.Bool("reset-db", false, "Launch with a fresh database")
+	resetDB := os.Getenv("RESET_DB")
 	versionFlag := flag.Bool("version", false, "Get the current version")
 	cliFlag := flag.Bool("cli", false, "Use in CLI mode")
 	authTokensFlag := flag.Bool("tokens", false, "Manage authentication tokens")
@@ -61,7 +61,7 @@ func main() {
 		return
 	}
 
-	conn := db.Connect(*resetDB)
+	conn := db.Connect(resetDB == "TRUE")
 	defer conn.Close()
 
 	if *cliFlag {
