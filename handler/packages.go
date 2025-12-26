@@ -33,6 +33,10 @@ func (h *Handler) createRelease(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	if len(payload.Artifacts) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	artifactsAreValid := true
 	for _, artifact := range payload.Artifacts {
 		if artifact.ArtifactType == "" || artifact.DownloadURL == "" {
@@ -98,7 +102,13 @@ func (h *Handler) getPackageReleases(w http.ResponseWriter, r *http.Request) {
 		Artifacts []models.Artifact `json:"artifacts"`
 	}
 	packageID := chi.URLParam(r, "id")
-	if !h.conn.PackageExists(packageID) {
+	dbPackage, err := h.conn.GetPackageByID(packageID)
+	if err != nil {
+		log.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if dbPackage == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -122,7 +132,12 @@ func (h *Handler) getPackageReleases(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	bytes, err := json.Marshal(map[string]any{
-		"data": releasesData,
+		"data": map[string]any{
+			"id":          dbPackage.ID,
+			"name":        dbPackage.Name,
+			"description": dbPackage.Description,
+			"releases":    releasesData,
+		},
 	})
 	if err != nil {
 		log.Println("Error while marshalling releases:", err.Error())

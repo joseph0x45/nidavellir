@@ -22,6 +22,19 @@ func (c *Conn) GetPackageByName(name string) (*models.Package, error) {
 	return dbPackage, nil
 }
 
+func (c *Conn) GetPackageByID(id string) (*models.Package, error) {
+	const query = "select * from packages where id=?"
+	dbPackage := &models.Package{}
+	err := c.db.Get(dbPackage, query, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("Error while getting package: %w", err)
+	}
+	return dbPackage, nil
+}
+
 func (c *Conn) InsertPackage(p *models.Package) error {
 	const query = `
     insert into packages (

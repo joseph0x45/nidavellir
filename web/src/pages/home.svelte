@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Package from "../components/Package.svelte";
+  import Breadcrumb from "../components/Breadcrumb.svelte";
 
   /**
    * @typedef {Object} Package
@@ -30,17 +31,8 @@
   });
 </script>
 
+<Breadcrumb items={[{ label: "Packages", href: "/" }]} />
 <main class="p-8 max-w-4xl mx-auto">
-  <h1 class="text-4xl font-bold mb-2 text-center">Welcome to Nidavellir</h1>
-
-  <div class="mb-6 flex justify-center">
-    <input
-      type="text"
-      placeholder="Search packages..."
-      class="w-full max-w-md p-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-  </div>
-
   {#if loading}
     <p>Loading packages...</p>
   {:else if error}
