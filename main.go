@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/joseph0x45/nidavellir/cli"
@@ -20,7 +21,10 @@ var appName = "nidavellir"
 
 func main() {
 	r := chi.NewRouter()
-	port := flag.String("port", "8080", "The port to start the app on")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	resetDB := flag.Bool("reset-db", false, "Launch with a fresh database")
 	versionFlag := flag.Bool("version", false, "Get the current version")
 	cliFlag := flag.Bool("cli", false, "Use in CLI mode")
@@ -45,7 +49,16 @@ func main() {
 	}
 
 	if *installService {
-		panic("Not Implemented")
+		f, err := os.Create("/etc/systemd/system/nidavellir.service")
+		if err != nil {
+			panic(err)
+		}
+		_, err = f.WriteString(serviceFile)
+		if err != nil {
+			panic(err)
+		}
+		log.Println("Service file created at /etc/systemd/system/nidavellir.service")
+		return
 	}
 
 	conn := db.Connect(*resetDB)
@@ -68,18 +81,18 @@ func main() {
 		return
 	}
 
-  r.Use(middleware.Logger)
+	r.Use(middleware.Logger)
 	handler := handler.NewHandler(conn)
 	handler.RegisterRoutes(r)
 	registerWeb(r)
 	server := http.Server{
 		Handler:      r,
-		Addr:         ":" + *port,
+		Addr:         ":" + port,
 		ReadTimeout:  time.Minute,
 		WriteTimeout: time.Minute,
 	}
 
-	log.Printf("Starting server on http://0.0.0.0:%s\n", *port)
+	log.Printf("Starting server on http://0.0.0.0:%s\n", port)
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
