@@ -16,5 +16,5 @@ func registerWeb(r chi.Router){
 	if err != nil {
 		panic(err)
 	}
-	r.Handle("/", http.FileServer(http.FS(dist)))
+	r.Handle("/*", http.FileServer(http.FS(dist)))
 }
