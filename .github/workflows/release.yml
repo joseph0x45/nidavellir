@@ -34,4 +34,4 @@ jobs:
         with:
           name: "${{ env.VERSION }}"
           tag_name: "${{ env.VERSION }}"
-          files: gyatt.tar.xz
+          files: nidavellir
