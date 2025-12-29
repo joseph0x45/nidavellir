@@ -13,6 +13,8 @@ test-seed:
 	./nidavellir --cli --packages --register --name test --description test --repo test --type binary
 	./nidavellir --cli --packages --register --name test2 --description test --repo test --type binary
 
-build-release:
+release:
+	cd web && npm run build
 	GOOS=linux GOARCH=amd64 \
 			 go build -tags release -ldflags "-X main.version=$(VERSION)" -o $(APP)
+	tar -cJf nidavellir.tar.xz nidavellir
