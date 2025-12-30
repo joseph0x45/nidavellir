@@ -42,7 +42,7 @@ func main() {
 	resourceRepository := flag.String("repo", "", "Set the repository URL for the resource")
 	resourceType := flag.String("type", "", "Set the type for the resource")
 	registerFlag := flag.Bool("register", false, "Register resource")
-	installService := flag.Bool("install-service", false, "Install Service file")
+	installServiceFlag := flag.Bool("install-service", false, "Install Service file")
 	setupConfigFlag := flag.Bool("setup-config", false, "Setup configuration file")
 
 	flag.Parse()
@@ -57,16 +57,8 @@ func main() {
 		return
 	}
 
-	if *installService {
-		f, err := os.Create("/etc/systemd/system/nidavellir.service")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		_, err = f.WriteString(serviceFile)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		log.Println("Service file created at /etc/systemd/system/nidavellir.service")
+	if *installServiceFlag {
+		installService()
 		return
 	}
 
