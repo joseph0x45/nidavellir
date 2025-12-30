@@ -1,2 +1,2 @@
-# gosvelte
-Golang + Svelte app template
+# Nidavellir
+My own self hosted software repository
