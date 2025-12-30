@@ -7,6 +7,8 @@ import (
 	"os/exec"
 	"os/user"
 	"text/template"
+
+	"github.com/joseph0x45/nidavellir/utils"
 )
 
 var serviceFile = `
@@ -20,10 +22,7 @@ Type=simple
 
 User={{.User}}
 
-Environment=XDG_CONFIG_HOME=%h/.config
-Environment=XDG_DATA_HOME=%h/.local/share
-
-EnvironmentFile=-%h/.config/nidavellir/conf
+EnvironmentFile=-{{.Config}}
 
 ExecStart=/usr/local/bin/nidavellir
 Restart=on-failure
@@ -57,7 +56,8 @@ func installService() {
 		log.Fatalln(err)
 	}
 	if err := t.Execute(f, map[string]string{
-		"User": user.Username,
+		"User":   user.Username,
+		"Config": utils.GetAppConfigFile(user),
 	}); err != nil {
 		log.Fatalln(err)
 	}
