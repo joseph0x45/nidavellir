@@ -1,3 +1,5 @@
+.PHONY: run
+
 VERSION := $(shell git describe --tags --abbrev=0)
 APP := nidavellir
 
@@ -5,7 +7,7 @@ run-web:
 	cd web && npm run dev -- --host
 
 run:
-	go build . && ./$(APP)
+	@./run_dev.sh
 
 test-seed:
 	./nidavellir --cli --tokens --create --label test

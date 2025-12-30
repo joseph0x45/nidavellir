@@ -16,15 +16,11 @@ func (c *Conn) Close() {
 	c.db.Close()
 }
 
-func Connect(reset bool) *Conn {
-	if reset {
+func Connect(opts sad.DBConnectionOptions) *Conn {
+	if opts.Reset {
 		log.Println("Starting Nidavellir with fresh database")
 	}
-	db, err := sad.OpenDBConnection(sad.DBConnectionOptions{
-		AppName:           "nidavellir",
-		EnableForeignKeys: true,
-		Reset:             reset,
-	}, migrations)
+	db, err := sad.OpenDBConnection(opts, migrations)
 	if err != nil {
 		panic(err)
 	}
